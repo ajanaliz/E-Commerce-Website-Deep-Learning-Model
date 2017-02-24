@@ -1,2 +1,2 @@
 # E-Commerce-Website-Deep-Learning-Model
-Training an ANN to predict user actions on website based on data.
+Training a deep A-NN to predict user actions on website based on data.
