@@ -13,22 +13,22 @@ def get_data():
     # easier to work with numpy array
     data = df.as_matrix()
 
-    X = data[:,:-1]
-    Y = data[:,-1]
+    X = data[:,:-1] # everything up to the last column
+    Y = data[:,-1] # the last column
 
-    # normalize columns 1 and 2
+    # normalize the numerical columns (columns 1 and 2)
     X[:,1] = (X[:,1] - X[:,1].mean()) / X[:,1].std()
     X[:,2] = (X[:,2] - X[:,2].mean()) / X[:,2].std()
 
     # create a new matrix X2 with the correct number of columns
     N, D = X.shape
-    X2 = np.zeros((N, D+3))
-    X2[:,0:(D-1)] = X[:,0:(D-1)] # non-categorical
+    X2 = np.zeros((N, D+3)) # there are 4 different categorical values so dimensionality is D+3
+    X2[:,0:(D-1)] = X[:,0:(D-1)] # non-categorical , most of X stays the same--> it'll be from the 0th to the D-1th column
 
-    # one-hot
-    for n in xrange(N):
-        t = int(X[n,D-1])
-        X2[n,t+D-1] = 1
+    # one-hot encoding for the other 4 columns
+    for n in xrange(N): # loop through every sample
+        t = int(X[n,D-1]) # get the time of day
+        X2[n,t+D-1] = 1 # its either 0,1,2 or 3
 
     # method 2
     # Z = np.zeros((N, 4))
@@ -42,6 +42,7 @@ def get_data():
 def get_binary_data():
     # return only the data from the first 2 classes
     X, Y = get_data()
+    # filter it by only taking classes 0 and 1
     X2 = X[Y <= 1]
     Y2 = Y[Y <= 1]
     return X2, Y2

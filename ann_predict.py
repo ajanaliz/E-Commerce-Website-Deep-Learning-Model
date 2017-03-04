@@ -4,9 +4,9 @@ from process import get_data
 X, Y = get_data()
 
 # randomly initialize weights
-M = 5
+M = 5 # 5 hidden units
 D = X.shape[1]
-K = len(set(Y))
+K = len(set(Y)) # number of unique values in Y
 W1 = np.random.randn(D, M)
 b1 = np.zeros(M)
 W2 = np.random.randn(M, K)
