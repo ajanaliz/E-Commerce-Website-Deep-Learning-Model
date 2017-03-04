@@ -4,18 +4,20 @@ import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 from process import get_data
 
-def y2indicator(y, K):
+
+def y2indicator(y, K):  # get the indicator matrix from the targets.
     N = len(y)
     ind = np.zeros((N, K))
     for i in xrange(N):
         ind[i, y[i]] = 1
     return ind
 
+
 X, Y = get_data()
 X, Y = shuffle(X, Y)
-Y = Y.astype(np.int32)
+Y = Y.astype(np.int32)  # convert y to int32
 D = X.shape[1]
-K = len(set(Y))
+K = len(set(Y))  # number of classes --> that's assuming our classes are numbered 0 to k-1
 
 # create train and test sets
 Xtrain = X[:-100]
@@ -29,23 +31,28 @@ Ytest_ind = y2indicator(Ytest, K)
 W = np.random.randn(D, K)
 b = np.zeros(K)
 
+
 # make predictions
-def softmax(a):
-    expA = np.exp(a)
-    return expA / expA.sum(axis=1, keepdims=True)
+def softmax(a):  # takes in activation
+    expA = np.exp(a)  # exponentiate the activation
+    return expA / expA.sum(axis=1, keepdims=True)  # divides by the sum along the rows
+
 
 def forward(X, W, b):
     return softmax(X.dot(W) + b)
 
+
 def predict(P_Y_given_X):
     return np.argmax(P_Y_given_X, axis=1)
+
 
 # calculate the accuracy
 def classification_rate(Y, P):
     return np.mean(Y == P)
 
+
 def cross_entropy(T, pY):
-    return -np.mean(T*np.log(pY))
+    return -np.mean(T * np.log(pY))
 
 
 # train loop
@@ -56,14 +63,15 @@ for i in xrange(10000):
     pYtrain = forward(Xtrain, W, b)
     pYtest = forward(Xtest, W, b)
 
+    # train cost and test cost
     ctrain = cross_entropy(Ytrain_ind, pYtrain)
     ctest = cross_entropy(Ytest_ind, pYtest)
     train_costs.append(ctrain)
     test_costs.append(ctest)
 
     # gradient descent
-    W -= learning_rate*Xtrain.T.dot(pYtrain - Ytrain_ind)
-    b -= learning_rate*(pYtrain - Ytrain_ind).sum(axis=0)
+    W -= learning_rate * Xtrain.T.dot(pYtrain - Ytrain_ind)
+    b -= learning_rate * (pYtrain - Ytrain_ind).sum(axis=0)  # sum along the 0th axis
     if i % 1000 == 0:
         print i, ctrain, ctest
 
